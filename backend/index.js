@@ -48,6 +48,49 @@ app.post('/alarmes', async (req, res) => {
     }
 });
 
+app.put('/alarmes/:id', async (req, res) => {
+    const { id } = req.params;
+    const { horario, dias, dificuldade } = req.body;
+
+    if (horario === undefined && dias === undefined && dificuldade === undefined) {
+        return res.status(400).json({ error: 'Nenhum campo para atualizar.' });
+    }
+
+    const fields = [];
+    const values = [];
+    let idx = 1;
+
+    if (horario !== undefined) {
+        fields.push(`horario = $${idx}`);
+        values.push(horario);
+        idx++;
+    }
+    if (dificuldade !== undefined) {
+        fields.push(`dificuldade = $${idx}`);
+        values.push(dificuldade);
+        idx++;
+    }
+    if (dias !== undefined) {
+        fields.push(`dias = $${idx}`);
+        values.push(Array.isArray(dias) && dias.length ? dias : null);
+        idx++;
+    }
+
+    values.push(id);
+
+    const query = `UPDATE alarmes SET ${fields.join(', ')} WHERE id = $${idx} RETURNING *`;
+
+    try {
+        const result = await pool.query(query, values);
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Alarme não encontrado' });
+        }
+        res.json({ success: true, alarme: result.rows[0] });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 app.put('/alarmes/:id/desativar', async (req, res) => {
     const { id } = req.params;
     try {
