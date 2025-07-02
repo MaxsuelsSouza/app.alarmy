@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "jsx": "react-native",
+    "strict": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "types": ["jest"],
+    "baseUrl": "./"
+  },
+  "include": ["**/*"],
+  "exclude": ["node_modules", "babel.config.js", "metro.config.js"]
+}
