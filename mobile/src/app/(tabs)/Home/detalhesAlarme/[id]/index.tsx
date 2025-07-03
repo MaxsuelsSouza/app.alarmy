@@ -6,16 +6,13 @@ import {
     Container,
     Header,
     TimeToRing,
-    PickerRow,
-    PickerValue,
-    PickerActive,
-    PickerDots,
     DiasRow,
     DiaBtn,
     DiaText,
     BtnGravar,
     MiddleContent,
 } from './styles';
+import Relogio from '@/components/Relogio';
 import { useDetalhesAlarme } from './page';
 
 const diasDaSemana = [
@@ -61,27 +58,14 @@ export default function DetalheAlarmeScreen() {
             </Header>
 
             <MiddleContent>
-                <PickerRow>
-                    <TouchableOpacity onPress={decrementarHora}>
-                        <PickerValue>{(hora + 23) % 24}</PickerValue>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={decrementarMinuto}>
-                        <PickerValue>{((minuto + 59) % 60).toString().padStart(2, '0')}</PickerValue>
-                    </TouchableOpacity>
-                </PickerRow>
-                <PickerRow>
-                    <PickerActive>{hora}</PickerActive>
-                    <PickerDots>:</PickerDots>
-                    <PickerActive>{minuto.toString().padStart(2, '0')}</PickerActive>
-                </PickerRow>
-                <PickerRow>
-                    <TouchableOpacity onPress={incrementarHora}>
-                        <PickerValue>{(hora + 1) % 24}</PickerValue>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={incrementarMinuto}>
-                        <PickerValue>{((minuto + 1) % 60).toString().padStart(2, '0')}</PickerValue>
-                    </TouchableOpacity>
-                </PickerRow>
+                <Relogio
+                    hora={hora}
+                    minuto={minuto}
+                    incrementarHora={incrementarHora}
+                    decrementarHora={decrementarHora}
+                    incrementarMinuto={incrementarMinuto}
+                    decrementarMinuto={decrementarMinuto}
+                />
 
                 <DiasRow>
                     {diasDaSemana.map(({ label, value }, idx) => (
