@@ -6,6 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Lista todos os alarmes cadastrados
 app.get('/alarmes', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM alarmes');
@@ -15,6 +16,7 @@ app.get('/alarmes', async (req, res) => {
     }
 });
 
+// Recupera um alarme específico pelo id
 app.get('/alarmes/:id', async (req, res) => {
     const { id } = req.params;
     try {
@@ -28,6 +30,7 @@ app.get('/alarmes/:id', async (req, res) => {
     }
 });
 
+// Cria um novo alarme
 app.post('/alarmes', async (req, res) => {
     const { horario, dificuldade, dias } = req.body;
 
@@ -48,6 +51,7 @@ app.post('/alarmes', async (req, res) => {
     }
 });
 
+//atualizar alarme
 app.put('/alarmes/:id', async (req, res) => {
     const { id } = req.params;
     const { horario, dias, dificuldade } = req.body;
@@ -91,6 +95,7 @@ app.put('/alarmes/:id', async (req, res) => {
     }
 });
 
+// Desativa um alarme existente
 app.put('/alarmes/:id/desativar', async (req, res) => {
     const { id } = req.params;
     try {
@@ -101,6 +106,7 @@ app.put('/alarmes/:id/desativar', async (req, res) => {
     }
 });
 
+// Ativa um alarme existente
 app.put('/alarmes/:id/ativar', async (req, res) => {
     const { id } = req.params;
     try {
@@ -111,6 +117,7 @@ app.put('/alarmes/:id/ativar', async (req, res) => {
     }
 });
 
+// Remove um alarme do banco
 app.delete('/alarmes/:id', async (req, res) => {
     const { id } = req.params;
     try {
@@ -124,6 +131,7 @@ app.delete('/alarmes/:id', async (req, res) => {
     }
 });
 
+// Gera um desafio baseado na dificuldade do alarme
 app.get('/desafio', async (req, res) => {
     const { id } = req.query; // Pega o id do alarme pela query string
 
@@ -231,6 +239,7 @@ app.get('/desafio', async (req, res) => {
     }
 });
 
+// Gera um desafio de acordo com o nível informado
 app.get('/desafio/:dificuldade', (req, res) => {
     const nivel = parseInt(req.params.dificuldade) || 1;
 
@@ -322,6 +331,7 @@ app.get('/desafio/:dificuldade', (req, res) => {
     });
 });
 
+// Lista as descrições de todos os níveis de dificuldade
 app.get('/dificuldades', (req, res) => {
     res.json([
         { nivel: 1, descricao: "Muito fácil: soma/subtração, números até 10" },
@@ -332,6 +342,7 @@ app.get('/dificuldades', (req, res) => {
     ]);
 });
 
+// Valida a resposta do usuário para um desafio
 app.post('/validar', (req, res) => {
     const { pergunta, respostaUsuario } = req.body;
     let resultado;
@@ -344,6 +355,7 @@ app.post('/validar', (req, res) => {
     res.json({ correto });
 });
 
+// Atualiza a dificuldade de um alarme existente
 app.put('/alarmes/:id/dificuldade', async (req, res) => {
     const { id } = req.params;
     const { dificuldade } = req.body;
