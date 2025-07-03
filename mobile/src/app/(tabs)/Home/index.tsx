@@ -2,10 +2,11 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, Switch, TouchableOpacity, RefreshControl } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
-  Container, Header, PremiumButton, PremiumText, NextAlarmLabel, NextAlarmTime,
-  AlarmCard, AlarmHeader, DayText, AlarmHour, Mission, Fab,
+  Container, Header, PremiumButton, PremiumText, NextAlarmTime,
+  AlarmHeader, DayText, AlarmHour, Mission, Fab,
   DaysContainer
 } from './styles';
+import Card from '@/components/Card';
 import { router, useFocusEffect } from 'expo-router';
 import { API_URL } from '@/constants/api';
 
@@ -129,7 +130,7 @@ export default function AlarmeHomeScreen() {
         keyExtractor={item => String(item.id)}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => router.push({ pathname: '/(tabs)/Home/detalhesAlarme/[id]', params: { id: item.id } })}>
-            <AlarmCard ativo={item.ativo}>
+            <Card ativo={item.ativo}>
               <AlarmHeader>
                 <DaysContainer>
                   <React.Fragment>
@@ -152,7 +153,7 @@ export default function AlarmeHomeScreen() {
               </AlarmHeader>
               <AlarmHour>{item.horario}</AlarmHour>
               <Mission>{item.missao ?? 'Missão'}</Mission>
-            </AlarmCard>
+            </Card>
           </TouchableOpacity>
         )}
         contentContainerStyle={{ paddingBottom: 100 }}

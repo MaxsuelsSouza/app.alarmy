@@ -38,17 +38,6 @@ export const NextAlarmTime = styled.Text`
   margin-bottom: 22px;
 `;
 
-export const AlarmCard = styled.View.attrs<{ ativo?: boolean }>(props => ({
-  style: {
-    opacity: props.ativo ? 1 : 0.4,
-  },
-}))`
-  background-color: #23242a;
-  border-radius: 16px;
-  padding: 18px;
-  margin-bottom: 18px;
-  position: relative;
-`;
 
 export const AlarmHeader = styled.View`
   flex-direction: row;
