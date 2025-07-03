@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, Switch, TouchableOpacity, RefreshControl } from 'react-native';
+import DesafioModal from '@/components/DesafioModal';
 import { Ionicons } from '@expo/vector-icons';
 import {
   Container, Header, PremiumButton, PremiumText, NextAlarmTime,
@@ -23,6 +24,9 @@ export default function AlarmeHomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [alarmes, setAlarmes] = useState<Alarme[]>([]);
   const [nextAlarmText, setNextAlarmText] = useState('Nenhum alarme');
+  const [desafio, setDesafio] = useState<{ pergunta: string; nivel: number } | null>(null);
+  const [resposta, setResposta] = useState('');
+  const [resultado, setResultado] = useState<'correto' | 'incorreto' | null>(null);
 
   const dayMap: Record<string, number> = {
     DOM: 0,
@@ -122,6 +126,61 @@ export default function AlarmeHomeScreen() {
     }
   };
 
+  const fetchDesafio = useCallback(async (nivel: number) => {
+    try {
+      const res = await fetch(`${API_URL}/desafio/${nivel}`);
+      const data = await res.json();
+      setDesafio({ pergunta: data.pergunta, nivel });
+      setResposta('');
+      setResultado(null);
+    } catch (err) {
+      console.error('Erro ao buscar desafio', err);
+    }
+  }, []);
+
+  const validarResposta = async () => {
+    if (!desafio) return;
+    try {
+      const res = await fetch(`${API_URL}/validar`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          pergunta: desafio.pergunta,
+          respostaUsuario: resposta,
+        }),
+      });
+      const data = await res.json();
+      setResultado(data.correto ? 'correto' : 'incorreto');
+    } catch (err) {
+      console.error('Erro ao validar resposta', err);
+    }
+  };
+
+  useEffect(() => {
+    const verificar = () => {
+      if (desafio) return;
+      const agora = new Date();
+      const horaAtual = agora.toTimeString().slice(0, 5);
+      const dia = agora.getDay();
+      for (const alarm of alarmes) {
+        if (!alarm.ativo) continue;
+        const dias = alarm.dias && alarm.dias.length
+          ? alarm.dias
+          : ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB', 'DOM'];
+        if (
+          alarm.horario === horaAtual &&
+          dias.map(d => dayMap[d.toUpperCase()]).includes(dia)
+        ) {
+          fetchDesafio(alarm.dificuldade);
+          break;
+        }
+      }
+    };
+    verificar();
+    const id = setInterval(verificar, 60000);
+    return () => clearInterval(id);
+  }, [alarmes, desafio, fetchDesafio]);
+
   return (
     <Container>
       <NextAlarmTime>{nextAlarmText}</NextAlarmTime>
@@ -169,6 +228,15 @@ export default function AlarmeHomeScreen() {
       <Fab onPress={() => router.push('/(tabs)/Home/adicionar' as any)}>
         <Ionicons name="add" size={36} color="#fff" />
       </Fab>
+      <DesafioModal
+        visible={!!desafio}
+        pergunta={desafio?.pergunta || ''}
+        resposta={resposta}
+        onChangeResposta={setResposta}
+        onConfirm={validarResposta}
+        onCancel={() => setDesafio(null)}
+        resultado={resultado}
+      />
     </Container>
   );
 }
