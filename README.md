@@ -1,7 +1,7 @@
-⏰ AlarmMath – O Alarme que te Obriga a Raciocinar
-Aplicativo de alarme que só pode ser desativado resolvendo cálculos matemáticos. Nada de “soneca” fácil: você só desliga o alarme quando o cérebro desperta de verdade.
+# ⏰ AlarmMath – O Alarme que te Obriga a Raciocinar
+*Aplicativo de alarme que só pode ser desativado resolvendo cálculos matemáticos. Nada de “soneca” fácil: você só desliga o alarme quando o cérebro desperta de verdade.*
 
-🚀 Funcionalidades
+### 🚀 Funcionalidades
 Defina o horário do alarme
 
 Alarme dispara no horário marcado
@@ -12,22 +12,22 @@ Interface simples e objetiva
 
 Ideal para quem precisa acordar sem enrolação
 
-⚙️ Instalação
+### ⚙️ Instalação
 Clone o repositório e instale as dependências:
 
 npm install
 
-▶️ Como Rodar
+### ▶️ Como Rodar
 
 npx expo start
 
 
-🛠️ Tecnologias
+### 🛠️ Tecnologias
 React Native (Expo)
 
 JavaScript/TypeScript
 
-✍️ Como Contribuir
+### ✍️ Como Contribuir
 Fork este repositório
 
 Crie uma branch: git checkout -b sua-feature
